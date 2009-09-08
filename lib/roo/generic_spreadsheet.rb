@@ -284,7 +284,7 @@ class GenericSpreadsheet
     ds = @default_sheet
     initialize(@filename) if self.class == Openoffice or
       self.class == Excel
-    initialize(@spreadsheetkey,@user,@password) if self.class == Google
+    initialize(@spreadsheetkey,@user,@password) if self.class == Roo::Google
     self.default_sheet = ds
     #@first_row = @last_row = @first_column = @last_column = nil
   end

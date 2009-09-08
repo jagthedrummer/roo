@@ -13,7 +13,7 @@
 #TODO
 # Look at formulas in excel - does not work with date/time
 
-
+#puts "running...."
 # Dump warnings that come from the test to open files
 # with the wrong spreadsheet class
 STDERR.reopen "/dev/null","w"
@@ -194,8 +194,8 @@ class TestRoo < Test::Unit::TestCase
       assert_kind_of Excel, oo
     end
     if GOOGLE
-      oo = Google.new(key_of("numbers1"))
-      assert_kind_of Google, oo
+      oo = Roo::Google.new(key_of("numbers1"))
+      assert_kind_of Roo::Google, oo
     end
     if EXCELX
       oo = Excelx.new(File.join(TESTDIR,"numbers1.xlsx"))
@@ -357,7 +357,7 @@ class TestRoo < Test::Unit::TestCase
       else  
         assert_raise(RangeError) { dummy = oo.formula?('C',5,"non existing sheet name")}
         assert_raise(RangeError) { dummy = oo.formula('C',5,"non existing sheet name")}
-        assert_raise(RangeError) { dummy = oo.set('C',5,42,"non existing sheet name")} unless oo.class == Google
+        assert_raise(RangeError) { dummy = oo.set('C',5,42,"non existing sheet name")} unless oo.class == Roo::Google
         assert_raise(RangeError) { dummy = oo.formulas("non existing sheet name")} 
       end
       assert_raise(RangeError) { dummy = oo.to_yaml({},1,1,1,1,"non existing sheet name")}
@@ -1043,7 +1043,7 @@ class TestRoo < Test::Unit::TestCase
   def test_simple_spreadsheet_find_by_condition
     with_each_spreadsheet(:name=>'simple_spreadsheet') do |oo|
       oo.header_line = 3
-      oo.date_format = '%m/%d/%Y' if oo.class == Google
+      oo.date_format = '%m/%d/%Y' if oo.class == Roo::Google
       erg = oo.find(:all, :conditions => {'Comment' => 'Task 1'})
       assert_equal Date.new(2007,05,07), erg[1]['Date']
       assert_equal 10.75       , erg[1]['Start time']
@@ -1145,7 +1145,7 @@ class TestRoo < Test::Unit::TestCase
     with_each_spreadsheet(:name=>'numbers1') do |oo|
       ext = get_extension(oo)
       expected = sprintf(expected_templ,ext)
-      if oo.class == Google      
+      if oo.class == Roo::Google      
         assert_equal expected.gsub(/numbers1/,key_of("numbers1")), oo.info
       else
         assert_equal expected, oo.info
@@ -1357,7 +1357,7 @@ Sheet 3:
   def test_no_remaining_tmp_files_google
     if GOOGLE
       assert_raise(GoogleReadError) {
-        oo = Google.new(key_of("no_spreadsheet_file.txt"))
+        oo = Roo::Google.new(key_of("no_spreadsheet_file.txt"))
       }
       a=Dir.glob("oo_*")
       assert_equal [], a
@@ -1803,17 +1803,17 @@ Sheet 3:
   
   def test_public_google_doc
     with_public_google_spreadsheet do 
-      assert_raise(GoogleHTTPError) { Google.new("foo") }
-      assert_raise(GoogleReadError) { Google.new(key_of('numbers1'))}
-      assert_nothing_raised { Google.new("0AncOJVyN5MMMcjZtN0hGbFVPd3N0MFJUVVR1aFEwT3c") } # use spreadsheet key (private)
-      assert_nothing_raised { Google.new(key_of('write.me')) } # use spreadsheet key (public)
+      assert_raise(GoogleHTTPError) { Roo::Google.new("foo") }
+      assert_raise(GoogleReadError) { Roo::Google.new(key_of('numbers1'))}
+      assert_nothing_raised { Roo::Google.new("0AncOJVyN5MMMcjZtN0hGbFVPd3N0MFJUVVR1aFEwT3c") } # use spreadsheet key (private)
+      assert_nothing_raised { Roo::Google.new(key_of('write.me')) } # use spreadsheet key (public)
     end
   end    
 
   def test_public_google_doc_write
     with_public_google_spreadsheet do 
       assert_raise(GoogleWriteError) {
-        oo = Google.new(key_of('write.me'))
+        oo = Roo::Google.new(key_of('write.me'))
         oo.set_value(1,1,'test')
       }  
     end

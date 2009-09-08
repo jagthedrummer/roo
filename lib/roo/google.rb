@@ -95,6 +95,7 @@ module GData
   end # class
 end # module
 
+module Roo
 class Google < GenericSpreadsheet
   attr_accessor :date_format, :datetime_format
   
@@ -376,4 +377,5 @@ class Google < GenericSpreadsheet
     return val, ty 
   end
   
-end # class
+end # class Google
+end # module Roo
