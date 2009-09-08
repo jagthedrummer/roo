@@ -6,11 +6,11 @@ module Roo
         when '.xls'
           Excel.new(file)
         when '.xlsx'
-          Excelx.new(file)
+         Excelx.new(file)
         when '.ods'
-          Openoffice.new(file)
+          Roo::Openoffice.new(file)
         when ''
-          Google.new(file)
+          Roo::Google.new(file)
         else
           raise ArgumentError, "Don't know how to open file #{file}"
         end      

@@ -5,6 +5,7 @@ require 'date'
 require 'base64'
 require 'cgi'
 
+module Roo
 class Openoffice < GenericSpreadsheet
 
   @@nr = 0
@@ -449,3 +450,5 @@ class Openoffice < GenericSpreadsheet
   end
 
 end # class
+
+end #module Roo

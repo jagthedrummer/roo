@@ -129,9 +129,9 @@ end
 class TestRoo < Test::Unit::TestCase
 
   OPENOFFICE   = true  	# do Openoffice-Spreadsheet Tests?
-  EXCEL        = true	  # do Excel Tests?
+  EXCEL        = true  # do Excel Tests?
   GOOGLE       = false 	# do Google-Spreadsheet Tests?
-  EXCELX       = true  	# do Excel-X Tests? (.xlsx-files)
+  EXCELX       = true	# do Excel-X Tests? (.xlsx-files)
 
   ONLINE = true
   LONG_RUN = false
@@ -186,8 +186,8 @@ class TestRoo < Test::Unit::TestCase
 
   def test_classes
     if OPENOFFICE
-      oo = Openoffice.new(File.join(TESTDIR,"numbers1.ods"))
-      assert_kind_of Openoffice, oo
+      oo = Roo::Openoffice.new(File.join(TESTDIR,"numbers1.ods"))
+      assert_kind_of Roo::Openoffice, oo
     end
     if EXCEL
       oo = Excel.new(File.join(TESTDIR,"numbers1.xls"))
@@ -470,7 +470,7 @@ class TestRoo < Test::Unit::TestCase
       assert_equal "A:string",oo.cell(4, 3)+":"+oo.celltype(4, 3).to_s
 
       # Cells values in row 5:
-      if oo.class == Openoffice
+      if oo.class == Roo::Openoffice
         assert_equal "0.01:percentage",oo.cell(5, 1).to_s+":"+oo.celltype(5, 1).to_s
         assert_equal "0.01:percentage",oo.cell(5, 2).to_s+":"+oo.celltype(5, 2).to_s
         assert_equal "0.01:percentage",oo.cell(5, 3).to_s+":"+oo.celltype(5, 3).to_s
@@ -671,7 +671,7 @@ class TestRoo < Test::Unit::TestCase
       if ONLINE
         begin
           url = 'http://spazioinwind.libero.it/s2/rata.ods.zip'
-          sheet = Openoffice.new(url, :zip)
+          sheet = Roo::Openoffice.new(url, :zip)
           #has been changed: assert_equal 'ist "e" im Nenner von H(s)', sheet.cell('b', 5)
           assert_in_delta 0.001, 505.14, sheet.cell('c', 33).to_f
         ensure
@@ -696,7 +696,7 @@ class TestRoo < Test::Unit::TestCase
   def test_openoffice_zipped
     if OPENOFFICE
       begin
-        oo = Openoffice.new(File.join(TESTDIR,"bode-v1.ods.zip"), :zip)
+        oo = Roo::Openoffice.new(File.join(TESTDIR,"bode-v1.ods.zip"), :zip)
         assert oo
         assert_equal 'ist "e" im Nenner von H(s)', oo.cell('b', 5)
       ensure  
@@ -1102,13 +1102,13 @@ class TestRoo < Test::Unit::TestCase
 
   def get_extension(oo)
     case oo
-    when Openoffice
+    when Roo::Openoffice
       ".ods"
     when Excel
       ".xls"
     when Excelx
       ".xlsx"
-    when Google  
+    when Roo::Google  
       ""
     end
   end
@@ -1158,35 +1158,35 @@ class TestRoo < Test::Unit::TestCase
       oo.default_sheet = "Tabelle1"
       assert_equal 1, oo.first_row
       assert_equal 18, oo.last_row
-      assert_equal Openoffice.letter_to_number('A'), oo.first_column
-      assert_equal Openoffice.letter_to_number('G'), oo.last_column
+      assert_equal Roo::Openoffice.letter_to_number('A'), oo.first_column
+      assert_equal Roo::Openoffice.letter_to_number('G'), oo.last_column
       oo.default_sheet = "Name of Sheet 2"
       assert_equal 5, oo.first_row
       assert_equal 14, oo.last_row
-      assert_equal Openoffice.letter_to_number('B'), oo.first_column
-      assert_equal Openoffice.letter_to_number('E'), oo.last_column
+      assert_equal Roo::Openoffice.letter_to_number('B'), oo.first_column
+      assert_equal Roo::Openoffice.letter_to_number('E'), oo.last_column
       oo.default_sheet = "Sheet3"
       assert_equal 1, oo.first_row
       assert_equal 1, oo.last_row
-      assert_equal Openoffice.letter_to_number('A'), oo.first_column
-      assert_equal Openoffice.letter_to_number('BA'), oo.last_column
+      assert_equal Roo::Openoffice.letter_to_number('A'), oo.first_column
+      assert_equal Roo::Openoffice.letter_to_number('BA'), oo.last_column
       oo.default_sheet = "Sheet4"
       assert_equal 1, oo.first_row
       assert_equal 1, oo.last_row
-      assert_equal Openoffice.letter_to_number('A'), oo.first_column
-      assert_equal Openoffice.letter_to_number('E'), oo.last_column
+      assert_equal Roo::Openoffice.letter_to_number('A'), oo.first_column
+      assert_equal Roo::Openoffice.letter_to_number('E'), oo.last_column
       oo.default_sheet = "Sheet5"
       assert_equal 1, oo.first_row
       assert_equal 6, oo.last_row
-      assert_equal Openoffice.letter_to_number('A'), oo.first_column
-      assert_equal Openoffice.letter_to_number('E'), oo.last_column
+      assert_equal Roo::Openoffice.letter_to_number('A'), oo.first_column
+      assert_equal Roo::Openoffice.letter_to_number('E'), oo.last_column
     end
   end
 
   def test_should_raise_file_not_found_error
     if OPENOFFICE
       assert_raise(IOError) {
-        oo = Openoffice.new(File.join('testnichtvorhanden','Bibelbund.ods'))
+        oo = Roo::Openoffice.new(File.join('testnichtvorhanden','Bibelbund.ods'))
       }
     end
     if EXCEL
@@ -1313,9 +1313,9 @@ Sheet 3:
   def test_no_remaining_tmp_files_openoffice
     if OPENOFFICE
       assert_raise(Zip::ZipError) { #TODO: besseres Fehlerkriterium bei
-        # oo = Openoffice.new(File.join(TESTDIR,"no_spreadsheet_file.txt"))
+        # oo = Roo::Openoffice.new(File.join(TESTDIR,"no_spreadsheet_file.txt"))
         # es soll absichtlich ein Abbruch provoziert werden, deshalb :ignore
-        oo = Openoffice.new(File.join(TESTDIR,"no_spreadsheet_file.txt"),
+        oo = Roo::Openoffice.new(File.join(TESTDIR,"no_spreadsheet_file.txt"),
           false,
           :ignore)
       }
@@ -1423,8 +1423,8 @@ Sheet 3:
 
   def test_file_warning_default
     if OPENOFFICE
-      assert_raises(TypeError) { oo = Openoffice.new(File.join(TESTDIR,"numbers1.xls")) }
-      assert_raises(TypeError) { oo = Openoffice.new(File.join(TESTDIR,"numbers1.xlsx")) }
+      assert_raises(TypeError) { oo = Roo::Openoffice.new(File.join(TESTDIR,"numbers1.xls")) }
+      assert_raises(TypeError) { oo = Roo::Openoffice.new(File.join(TESTDIR,"numbers1.xlsx")) }
       assert_equal [], Dir.glob("oo_*")
     end
     if EXCEL
@@ -1441,8 +1441,8 @@ Sheet 3:
 
   def test_file_warning_error
     if OPENOFFICE
-      assert_raises(TypeError) { oo = Openoffice.new(File.join(TESTDIR,"numbers1.xls"),false,:error) }
-      assert_raises(TypeError) { oo = Openoffice.new(File.join(TESTDIR,"numbers1.xlsx"),false,:error) }
+      assert_raises(TypeError) { oo = Roo::Openoffice.new(File.join(TESTDIR,"numbers1.xls"),false,:error) }
+      assert_raises(TypeError) { oo = Roo::Openoffice.new(File.join(TESTDIR,"numbers1.xlsx"),false,:error) }
       assert_equal [], Dir.glob("oo_*")
     end
     if EXCEL
@@ -1461,12 +1461,12 @@ Sheet 3:
     if OPENOFFICE
       assert_nothing_raised(TypeError) {
         assert_raises(Zip::ZipError) {
-          oo = Openoffice.new(File.join(TESTDIR,"numbers1.xls"),false, :warning)
+          oo = Roo::Openoffice.new(File.join(TESTDIR,"numbers1.xls"),false, :warning)
         }
       }
       assert_nothing_raised(TypeError) {
         assert_raises(Errno::ENOENT) {
-          oo = Openoffice.new(File.join(TESTDIR,"numbers1.xlsx"),false, :warning)
+          oo = Roo::Openoffice.new(File.join(TESTDIR,"numbers1.xlsx"),false, :warning)
         }
       }
       assert_equal [], Dir.glob("oo_*")
@@ -1499,11 +1499,11 @@ Sheet 3:
     if OPENOFFICE
       assert_nothing_raised(TypeError) {
         assert_raises(Zip::ZipError) {
-          oo = Openoffice.new(File.join(TESTDIR,"numbers1.xls"),false, :ignore) }
+          oo = Roo::Openoffice.new(File.join(TESTDIR,"numbers1.xls"),false, :ignore) }
       }
       assert_nothing_raised(TypeError) {
         assert_raises(Errno::ENOENT) {
-          oo = Openoffice.new(File.join(TESTDIR,"numbers1.xlsx"),false, :ignore) }
+          oo = Roo::Openoffice.new(File.join(TESTDIR,"numbers1.xlsx"),false, :ignore) }
       }
       assert_equal [], Dir.glob("oo_*")
     end
@@ -1794,7 +1794,7 @@ Sheet 3:
   
   
   def test_bad_excel_date
-    with_each_spreadsheet(:name=>'bad_exceL_date', :format=>:excel) do |oo|   
+    with_each_spreadsheet(:name=>'bad_excel_date', :format=>:excel) do |oo|   
       assert_nothing_raised(ArgumentError) {
         assert_equal DateTime.new(2006,2,2,10,0,0), oo.cell('a',1)
       }

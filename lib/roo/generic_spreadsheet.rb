@@ -282,7 +282,7 @@ class GenericSpreadsheet
   # reopens and read a spreadsheet document
   def reload
     ds = @default_sheet
-    initialize(@filename) if self.class == Openoffice or
+    initialize(@filename) if self.class == Roo::Openoffice or
       self.class == Excel
     initialize(@spreadsheetkey,@user,@password) if self.class == Roo::Google
     self.default_sheet = ds
