@@ -101,7 +101,7 @@ module ExcelFontExtensions
   end
 
 end
-
+module Roo
 # Class for handling Excel-Spreadsheets
 class Excel < GenericSpreadsheet 
 
@@ -126,7 +126,7 @@ class Excel < GenericSpreadsheet
       unless File.file?(@filename)
         raise IOError, "file #{@filename} does not exist"
       end
-      @workbook = Spreadsheet.open(filename)
+      @workbook = ::Spreadsheet.open(filename)
       @default_sheet = self.sheets.first
     ensure
       #if ENV["roo_local"] != "thomas-p"
@@ -355,7 +355,7 @@ class Excel < GenericSpreadsheet
       (0..row.size).each do |cell_index|
         cell = row.at(cell_index)
         next if cell.nil?  #skip empty cells
-        next if cell.class == Spreadsheet::Formula && cell.value.nil? # skip empty formla cells
+        next if cell.class == ::Spreadsheet::Formula && cell.value.nil? # skip empty formla cells
         if date_or_time?(row, cell_index)
           vt, v = read_cell_date_or_time(row, cell_index)
         else
@@ -376,7 +376,7 @@ class Excel < GenericSpreadsheet
   # way formula stores the value
   def read_cell_content(row, idx)
     cell = row.at(idx)
-    cell = cell.value if cell.class == Spreadsheet::Formula
+    cell = cell.value if cell.class == ::Spreadsheet::Formula
     cell
   end
     
@@ -408,7 +408,7 @@ class Excel < GenericSpreadsheet
       s = secs
       value = h*3600+m*60+s
     else
-      if row.at(idx).class == Spreadsheet::Formula
+      if row.at(idx).class == ::Spreadsheet::Formula
         datetime = row._datetime(cell)
       else
         datetime = row.datetime(idx)
@@ -420,7 +420,7 @@ class Excel < GenericSpreadsheet
         value = datetime
       else
         value_type = :date
-        if row.at(idx).class == Spreadsheet::Formula
+        if row.at(idx).class == ::Spreadsheet::Formula
           value = row._date(cell)
         else
           value = row.date(idx)
@@ -465,4 +465,5 @@ class Excel < GenericSpreadsheet
   #  end
   #
 
-end
+end #class Excel
+end #module Roo

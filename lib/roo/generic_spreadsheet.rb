@@ -268,7 +268,7 @@ class GenericSpreadsheet
   # column numbers are 1,2,3,... like in the spreadsheet
   def column(columnnumber,sheet=nil)
     if columnnumber.class == String
-      columnnumber = Excel.letter_to_number(columnnumber)
+      columnnumber = Roo::Excel.letter_to_number(columnnumber)
     end
     sheet = @default_sheet unless sheet
     read_cells(sheet) unless @cells_read[sheet]
@@ -283,7 +283,7 @@ class GenericSpreadsheet
   def reload
     ds = @default_sheet
     initialize(@filename) if self.class == Roo::Openoffice or
-      self.class == Excel
+      self.class == Roo::Excel
     initialize(@spreadsheetkey,@user,@password) if self.class == Roo::Google
     self.default_sheet = ds
     #@first_row = @last_row = @first_column = @last_column = nil
@@ -292,7 +292,7 @@ class GenericSpreadsheet
   # true if cell is empty
   def empty?(row, col, sheet=nil)
     sheet = @default_sheet unless sheet
-    read_cells(sheet) unless @cells_read[sheet] or self.class == Excel
+    read_cells(sheet) unless @cells_read[sheet] or self.class == Roo::Excel
     row,col = normalize(row,col)
     return true unless cell(row, col, sheet)
     return true if celltype(row, col, sheet) == :string && cell(row, col, sheet).empty?

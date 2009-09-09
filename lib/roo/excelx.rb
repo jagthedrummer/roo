@@ -9,6 +9,7 @@ class  String
   end
 end
 
+module Roo
 class Excelx < GenericSpreadsheet
   FORMATS = {
     'General' => :float,
@@ -600,3 +601,4 @@ class Excelx < GenericSpreadsheet
   end
 
 end # class
+end # module Roo

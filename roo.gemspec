@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{roo}
-  s.version = "1.3.10"
+  s.version = "1.3.12"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Hugh McGowan", "Thomas Preymesser"]
-  s.date = %q{2009-08-29}
+  s.date = %q{2009-09-08}
   s.description = %q{roo can access the contents of OpenOffice-, Excel- or Google-Spreadsheets}
   s.email = %q{hugh_mcgowan@yahoo.com}
   s.extra_rdoc_files = [
@@ -88,24 +88,25 @@ Gem::Specification.new do |s|
      "test/whitespace.xls",
      "test/whitespace.xlsx"
   ]
+  s.has_rdoc = true
   s.homepage = %q{http://roo.rubyforge.org}
   s.rdoc_options = ["--main", "README.markdown"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{roo}
-  s.rubygems_version = %q{1.3.3}
+  s.rubygems_version = %q{1.3.1}
   s.summary = %q{roo}
   s.test_files = [
-    "test/skipped_tests.rb",
-     "test/test_helper.rb",
+    "test/test_helper.rb",
+     "test/skipped_tests.rb",
      "test/test_roo.rb",
-     "examples/roo_soap_client.rb",
+     "examples/write_me.rb",
      "examples/roo_soap_server.rb",
-     "examples/write_me.rb"
+     "examples/roo_soap_client.rb"
   ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
+    s.specification_version = 2
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<spreadsheet>, [">= 0.6.4"])

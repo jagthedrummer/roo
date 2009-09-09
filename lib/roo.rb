@@ -4,9 +4,9 @@ module Roo
       def open(file)
         case File.extname(file)
         when '.xls'
-          Excel.new(file)
+          Roo::Excel.new(file)
         when '.xlsx'
-         Excelx.new(file)
+         Roo::Excelx.new(file)
         when '.ods'
           Roo::Openoffice.new(file)
         when ''

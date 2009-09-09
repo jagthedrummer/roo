@@ -190,16 +190,16 @@ class TestRoo < Test::Unit::TestCase
       assert_kind_of Roo::Openoffice, oo
     end
     if EXCEL
-      oo = Excel.new(File.join(TESTDIR,"numbers1.xls"))
-      assert_kind_of Excel, oo
+      oo = Roo::Excel.new(File.join(TESTDIR,"numbers1.xls"))
+      assert_kind_of Roo::Excel, oo
     end
     if GOOGLE
       oo = Roo::Google.new(key_of("numbers1"))
       assert_kind_of Roo::Google, oo
     end
     if EXCELX
-      oo = Excelx.new(File.join(TESTDIR,"numbers1.xlsx"))
-      assert_kind_of Excelx, oo
+      oo = Roo::Excelx.new(File.join(TESTDIR,"numbers1.xlsx"))
+      assert_kind_of Roo::Excelx, oo
     end
   end
 
@@ -351,7 +351,7 @@ class TestRoo < Test::Unit::TestCase
       assert_raise(RangeError) { dummy = oo.cell('C',5,"non existing sheet name")}
       assert_raise(RangeError) { dummy = oo.celltype('C',5,"non existing sheet name")}
       assert_raise(RangeError) { dummy = oo.empty?('C',5,"non existing sheet name")}
-      if oo.class == Excel
+      if oo.class == Roo::Excel
         assert_raise(RuntimeError) { dummy = oo.formula?('C',5,"non existing sheet name")}
         assert_raise(RuntimeError) { dummy = oo.formula('C',5,"non existing sheet name")}
       else  
@@ -656,7 +656,7 @@ class TestRoo < Test::Unit::TestCase
       if ONLINE
         begin
           url = 'http://stiny-leonhard.de/bode-v1.xls.zip'
-          excel = Excel.new(url, :zip)
+          excel = Roo::Excel.new(url, :zip)
           excel.default_sheet = excel.sheets.first
           assert_equal 'ist "e" im Nenner von H(s)', excel.cell('b', 5)
         ensure  
@@ -684,7 +684,7 @@ class TestRoo < Test::Unit::TestCase
   def test_excel_zipped
     if EXCEL
       begin
-        oo = Excel.new(File.join(TESTDIR,"bode-v1.xls.zip"), :zip)
+        oo = Roo::Excel.new(File.join(TESTDIR,"bode-v1.xls.zip"), :zip)
         assert oo
         assert_equal 'ist "e" im Nenner von H(s)', oo.cell('b', 5)
       ensure
@@ -756,7 +756,7 @@ class TestRoo < Test::Unit::TestCase
     end
     #if EXCELX
     #    #Datei gibt es noch nicht
-    #    oo = Excelx.new(File.join(TESTDIR,"Bibelbund1.xlsx"))
+    #    oo = Roo::Excelx.new(File.join(TESTDIR,"Bibelbund1.xlsx"))
     #    oo.default_sheet = oo.sheets.first
     #    assert_equal "Tagebuch des Sekret\303\244rs.    Letzte Tagung 15./16.11.75 Schweiz", oo.cell(45,'A')
     #end
@@ -1049,7 +1049,7 @@ class TestRoo < Test::Unit::TestCase
       assert_equal 10.75       , erg[1]['Start time']
       assert_equal 12.50       , erg[1]['End time']
       assert_equal 0           , erg[1]['Pause']
-      assert_equal 1.75        , erg[1]['Sum'] unless oo.class == Excel
+      assert_equal 1.75        , erg[1]['Sum'] unless oo.class == Roo::Excel
       assert_equal "Task 1"    , erg[1]['Comment']
     end
   end
@@ -1104,9 +1104,9 @@ class TestRoo < Test::Unit::TestCase
     case oo
     when Roo::Openoffice
       ".ods"
-    when Excel
+    when Roo::Excel
       ".xls"
-    when Excelx
+    when Roo::Excelx
       ".xlsx"
     when Roo::Google  
       ""
@@ -1191,12 +1191,12 @@ class TestRoo < Test::Unit::TestCase
     end
     if EXCEL
       assert_raise(IOError) {
-        oo = Excel.new(File.join('testnichtvorhanden','Bibelbund.xls'))
+        oo = Roo::Excel.new(File.join('testnichtvorhanden','Bibelbund.xls'))
       }
     end
     if EXCELX
       assert_raise(IOError) {
-        oo = Excelx.new(File.join('testnichtvorhanden','Bibelbund.xlsx'))
+        oo = Roo::Excelx.new(File.join('testnichtvorhanden','Bibelbund.xlsx'))
       }
     end
     if GOOGLE
@@ -1327,9 +1327,9 @@ Sheet 3:
   def test_no_remaining_tmp_files_excel
     if EXCEL
       assert_raise(Ole::Storage::FormatError) {
-        # oo = Excel.new(File.join(TESTDIR,"no_spreadsheet_file.txt"))
+        # oo = Roo::Excel.new(File.join(TESTDIR,"no_spreadsheet_file.txt"))
         # es soll absichtlich ein Abbruch provoziert werden, deshalb :ignore
-        oo = Excel.new(File.join(TESTDIR,"no_spreadsheet_file.txt"),
+        oo = Roo::Excel.new(File.join(TESTDIR,"no_spreadsheet_file.txt"),
           false,
           :ignore)
       }
@@ -1342,9 +1342,9 @@ Sheet 3:
     if EXCELX
       assert_raise(Zip::ZipError) { #TODO: besseres Fehlerkriterium bei
 
-        # oo = Excelx.new(File.join(TESTDIR,"no_spreadsheet_file.txt"))
+        # oo = Roo::Excelx.new(File.join(TESTDIR,"no_spreadsheet_file.txt"))
         # es soll absichtlich ein Abbruch provoziert werden, deshalb :ignore
-        oo = Excelx.new(File.join(TESTDIR,"no_spreadsheet_file.txt"),
+        oo = Roo::Excelx.new(File.join(TESTDIR,"no_spreadsheet_file.txt"),
           false,
           :ignore)
 
@@ -1428,13 +1428,13 @@ Sheet 3:
       assert_equal [], Dir.glob("oo_*")
     end
     if EXCEL
-      assert_raises(TypeError) { oo = Excel.new(File.join(TESTDIR,"numbers1.ods")) }
-      assert_raises(TypeError) { oo = Excel.new(File.join(TESTDIR,"numbers1.xlsx")) }
+      assert_raises(TypeError) { oo = Roo::Excel.new(File.join(TESTDIR,"numbers1.ods")) }
+      assert_raises(TypeError) { oo = Roo::Excel.new(File.join(TESTDIR,"numbers1.xlsx")) }
       assert_equal [], Dir.glob("oo_*")
     end
     if EXCELX
-      assert_raises(TypeError) { oo = Excelx.new(File.join(TESTDIR,"numbers1.ods")) }
-      assert_raises(TypeError) { oo = Excelx.new(File.join(TESTDIR,"numbers1.xls")) }
+      assert_raises(TypeError) { oo = Roo::Excelx.new(File.join(TESTDIR,"numbers1.ods")) }
+      assert_raises(TypeError) { oo = Roo::Excelx.new(File.join(TESTDIR,"numbers1.xls")) }
       assert_equal [], Dir.glob("oo_*")
     end
   end
@@ -1446,13 +1446,13 @@ Sheet 3:
       assert_equal [], Dir.glob("oo_*")
     end
     if EXCEL
-      assert_raises(TypeError) { oo = Excel.new(File.join(TESTDIR,"numbers1.ods"),false,:error) }
-      assert_raises(TypeError) { oo = Excel.new(File.join(TESTDIR,"numbers1.xlsx"),false,:error) }
+      assert_raises(TypeError) { oo = Roo::Excel.new(File.join(TESTDIR,"numbers1.ods"),false,:error) }
+      assert_raises(TypeError) { oo = Roo::Excel.new(File.join(TESTDIR,"numbers1.xlsx"),false,:error) }
       assert_equal [], Dir.glob("oo_*")
     end
     if EXCELX
-      assert_raises(TypeError) { oo = Excelx.new(File.join(TESTDIR,"numbers1.ods"),false,:error) }
-      assert_raises(TypeError) { oo = Excelx.new(File.join(TESTDIR,"numbers1.xls"),false,:error) }
+      assert_raises(TypeError) { oo = Roo::Excelx.new(File.join(TESTDIR,"numbers1.ods"),false,:error) }
+      assert_raises(TypeError) { oo = Roo::Excelx.new(File.join(TESTDIR,"numbers1.xls"),false,:error) }
       assert_equal [], Dir.glob("oo_*")
     end
   end
@@ -1474,22 +1474,22 @@ Sheet 3:
     if EXCEL
       assert_nothing_raised(TypeError) {
         assert_raises(Ole::Storage::FormatError) {
-          oo = Excel.new(File.join(TESTDIR,"numbers1.ods"),false, :warning) }
+          oo = Roo::Excel.new(File.join(TESTDIR,"numbers1.ods"),false, :warning) }
       }
       assert_nothing_raised(TypeError) {
         assert_raises(Ole::Storage::FormatError) {
-          oo = Excel.new(File.join(TESTDIR,"numbers1.xlsx"),false, :warning) }
+          oo = Roo::Excel.new(File.join(TESTDIR,"numbers1.xlsx"),false, :warning) }
       }
       assert_equal [], Dir.glob("oo_*")
     end
     if EXCELX
       assert_nothing_raised(TypeError) {
         assert_raises(Errno::ENOENT) {
-          oo = Excelx.new(File.join(TESTDIR,"numbers1.ods"),false, :warning) }
+          oo = Roo::Excelx.new(File.join(TESTDIR,"numbers1.ods"),false, :warning) }
       }
       assert_nothing_raised(TypeError) {
         assert_raises(Zip::ZipError) {
-          oo = Excelx.new(File.join(TESTDIR,"numbers1.xls"),false, :warning) }
+          oo = Roo::Excelx.new(File.join(TESTDIR,"numbers1.xls"),false, :warning) }
       }
       assert_equal [], Dir.glob("oo_*")
     end
@@ -1510,21 +1510,21 @@ Sheet 3:
     if EXCEL
       assert_nothing_raised(TypeError) {
         assert_raises(Ole::Storage::FormatError) {
-          oo = Excel.new(File.join(TESTDIR,"numbers1.ods"),false, :ignore) }
+          oo = Roo::Excel.new(File.join(TESTDIR,"numbers1.ods"),false, :ignore) }
       }
       assert_nothing_raised(TypeError) {
-        assert_raises(Ole::Storage::FormatError) {oo = Excel.new(File.join(TESTDIR,"numbers1.xlsx"),false, :ignore) }}
+        assert_raises(Ole::Storage::FormatError) {oo = Roo::Excel.new(File.join(TESTDIR,"numbers1.xlsx"),false, :ignore) }}
       assert_equal [], Dir.glob("oo_*")
     end
     if EXCELX
       assert_nothing_raised(TypeError) {
         assert_raises(Errno::ENOENT) {
-          oo = Excelx.new(File.join(TESTDIR,"numbers1.ods"),false, :ignore)
+          oo = Roo::Excelx.new(File.join(TESTDIR,"numbers1.ods"),false, :ignore)
         }
       }
       assert_nothing_raised(TypeError) {
         assert_raises(Zip::ZipError) {
-          oo = Excelx.new(File.join(TESTDIR,"numbers1.xls"),false, :ignore)
+          oo = Roo::Excelx.new(File.join(TESTDIR,"numbers1.xls"),false, :ignore)
         }
       }
       assert_equal [], Dir.glob("oo_*")
@@ -1643,7 +1643,7 @@ Sheet 3:
   
   def test_cell_boolean
     with_each_spreadsheet(:name=>'boolean', :format=>[:openoffice, :excel, :excelx]) do |oo|    
-      if oo.class == Excelx    
+      if oo.class == Roo::Excelx    
         assert_equal "TRUE", oo.cell(1,1)
         assert_equal "FALSE", oo.cell(2,1)
       else
